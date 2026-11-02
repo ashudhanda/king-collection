@@ -328,6 +328,7 @@ if (productPage) {
     })
   );
   setMain(p.images[0]);
+  mainImg.alt = p.name; // Screen readers get the product name, not the generic "Product image".
 
   // Sizes
   const sizesEl = document.getElementById("sizes");
