@@ -315,20 +315,24 @@ if (productPage) {
   sizesEl.innerHTML = p.sizes
     .map((s) => `<button class="size-btn${s === selectedSize ? " active" : ""}" data-size="${s}">${s}</button>`)
     .join("");
+  const waBtn = document.getElementById("waBtn");
+  const updateWaBtn = () =>
+    (waBtn.href =
+      `https://wa.me/${WHATSAPP_NUMBER}?text=` +
+      encodeURIComponent(`Hi King Collection! I want to order: ${p.name} (Size ${selectedSize}) — ${fmt(p.price)}`));
   sizesEl.querySelectorAll(".size-btn").forEach((b) =>
     b.addEventListener("click", () => {
       sizesEl.querySelectorAll(".size-btn").forEach((x) => x.classList.remove("active"));
       b.classList.add("active");
       selectedSize = b.dataset.size;
+      updateWaBtn(); // Otherwise the WhatsApp message keeps the size selected on page load.
     })
   );
 
   // Actions
   document.getElementById("addBtn").addEventListener("click", () => addToCart(p.id, selectedSize));
   document.getElementById("stickyAdd").addEventListener("click", () => addToCart(p.id, selectedSize));
-  document.getElementById("waBtn").href =
-    `https://wa.me/${WHATSAPP_NUMBER}?text=` +
-    encodeURIComponent(`Hi King Collection! I want to order: ${p.name} (Size ${selectedSize}) — ${fmt(p.price)}`);
+  updateWaBtn();
 
   // Related products
   const related = PRODUCTS.filter((x) => x.id !== p.id).slice(0, 6);
