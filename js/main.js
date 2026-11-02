@@ -86,6 +86,16 @@ function openCart(open) {
 document.getElementById("cartBtn")?.addEventListener("click", () => openCart(true));
 document.getElementById("cartClose").addEventListener("click", () => openCart(false));
 cartOverlay.addEventListener("click", () => openCart(false));
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (cartDrawer.classList.contains("open")) openCart(false);
+  else if (burger && mobileMenu && mobileMenu.classList.contains("open")) {
+    mobileMenu.classList.remove("open");
+    burger.classList.remove("open");
+    burger.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+});
 
 /* ==================== CART LOGIC ==================== */
 let cart = [];
