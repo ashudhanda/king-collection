@@ -266,9 +266,14 @@ if (shopGrid) {
 
   btns.forEach((b) => {
     b.classList.toggle("active", b.dataset.filter === active);
+    b.setAttribute("aria-pressed", String(b.dataset.filter === active));
     b.addEventListener("click", () => {
-      btns.forEach((x) => x.classList.remove("active"));
+      btns.forEach((x) => {
+        x.classList.remove("active");
+        x.setAttribute("aria-pressed", "false");
+      });
       b.classList.add("active");
+      b.setAttribute("aria-pressed", "true");
       renderGrid(b.dataset.filter);
     });
   });
