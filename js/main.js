@@ -6,9 +6,16 @@
 // ⚠️ APNA WHATSAPP NUMBER YAHA DAALO (country code ke saath, bina + ke)
 const WHATSAPP_NUMBER = "919814137851";
 
-const fmt = (n) => "\u20b9" + n.toLocaleString("en-IN");
+const fmt = (n) => {
+  const v = Number(n);
+  return "\u20b9" + (Number.isFinite(v) ? v : 0).toLocaleString("en-IN");
+};
 const imgSrc = (name) => `images/products/${name}.jpg`;
-const offPct = (p) => Math.round((1 - p.price / p.mrp) * 100);
+// A zero/missing MRP (or price >= MRP) used to print NaN% / negative discounts.
+const offPct = (p) => {
+  if (!p.mrp || p.mrp <= 0 || p.price >= p.mrp) return 0;
+  return Math.round((1 - p.price / p.mrp) * 100);
+};
 
 /* ==================== THEME TOGGLE ==================== */
 const rootEl = document.documentElement;
