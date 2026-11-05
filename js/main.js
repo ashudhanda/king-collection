@@ -110,7 +110,13 @@ try {
   const stored = JSON.parse(localStorage.getItem("kingcollection_cart") || "[]");
   // A corrupted or foreign value (object, string, number) would break
   // cart.find/reduce below, so only accept an array and drop the rest.
-  cart = Array.isArray(stored) ? stored : [];
+  // Entries are also sanitised: a hand-edited qty like "2" used to string-
+  // concat on +1 ("21") and poison the total, so coerce + validate each.
+  cart = Array.isArray(stored)
+    ? stored
+        .filter((c) => c && typeof c === "object" && Number.isFinite(+c.id) && typeof c.size === "string" && Number.isFinite(+c.qty) && +c.qty > 0)
+        .map((c) => ({ id: +c.id, size: c.size, qty: Math.floor(+c.qty) }))
+    : [];
 } catch (e) { cart = []; }
 
 function saveCart() {
@@ -168,8 +174,10 @@ function renderCart() {
   wrap.querySelectorAll("[data-qty]").forEach((b) =>
     b.addEventListener("click", () => {
       const i = +b.dataset.i;
-      cart[i].qty += +b.dataset.qty;
-      if (cart[i].qty <= 0) cart.splice(i, 1);
+      const item = cart[i];
+      if (!item) return; // Stale button after the row was already removed.
+      item.qty += +b.dataset.qty;
+      if (item.qty <= 0) cart.splice(i, 1);
       saveCart();
     })
   );
