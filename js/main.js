@@ -267,22 +267,31 @@ if (featuredRow) {
 /* ==================== SHOP PAGE ==================== */
 const shopGrid = document.getElementById("shopGrid");
 if (shopGrid) {
+  const params = new URLSearchParams(location.search);
+  let active = params.get("cat") || "all";
+  // ?tag=New%20Drop (from the "New Drop" nav link) filters by product tag.
+  let tag = params.get("tag") || "";
+  const countEl = document.querySelector(".page-sub");
   const renderGrid = (filter) => {
-    const list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
+    let list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
+    if (tag) list = PRODUCTS.filter((p) => p.tag === tag);
     shopGrid.innerHTML = list.map(productCard).join("") || `<p class="cart-empty">No products yet.</p>`;
+    // The old hardcoded "8 pieces" went stale the moment a product was added.
+    if (countEl) countEl.textContent = `${list.length} piece${list.length === 1 ? "" : "s"}${tag ? " · " + tag : ""}. Zero fillers. All heat.`;
     attachCardCycler(shopGrid);
   };
 
-  const params = new URLSearchParams(location.search);
-  let active = params.get("cat") || "all";
   const btns = document.querySelectorAll(".filter-btn");
   const validCats = [...btns].map((b) => b.dataset.filter);
   if (!validCats.includes(active)) active = "all";
 
   btns.forEach((b) => {
-    b.classList.toggle("active", b.dataset.filter === active);
-    b.setAttribute("aria-pressed", String(b.dataset.filter === active));
+    const isActive = !tag && b.dataset.filter === active;
+    b.classList.toggle("active", isActive);
+    b.setAttribute("aria-pressed", String(isActive));
     b.addEventListener("click", () => {
+      tag = ""; // A category pick replaces the tag filter; the URL follows.
+      history.replaceState(null, "", b.dataset.filter === "all" ? location.pathname : `${location.pathname}?cat=${b.dataset.filter}`);
       btns.forEach((x) => {
         x.classList.remove("active");
         x.setAttribute("aria-pressed", "false");
