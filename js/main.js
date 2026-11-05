@@ -385,6 +385,17 @@ if (productPage) {
   attachCardCycler(relatedRow);
 }
 
+/* ==================== NEWSLETTER (footer, home page only) ==================== */
+const newsForm = document.getElementById("newsForm");
+if (newsForm) {
+  // Inline confirmation instead of a blocking alert(): the old inline
+  // onsubmit showed an alert and gave no on-page feedback.
+  newsForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    newsForm.innerHTML = `<p class="news-ok" role="status">You're in! 🎉 New drops, straight to your inbox.</p>`;
+  });
+}
+
 /* ==================== ANIMATIONS (sirf hero entrance — scroll simple/native hai) ==================== */
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
