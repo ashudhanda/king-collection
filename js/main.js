@@ -64,7 +64,7 @@ document.body.insertAdjacentHTML(
   "beforeend",
   `
   <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
     <div class="cart-head">
       <h3>Your Cart</h3>
       <button class="icon-btn" id="cartClose" aria-label="Close cart">✕</button>
@@ -137,7 +137,10 @@ function renderCart() {
   const countEl = document.getElementById("cartCount");
   const totalEl = document.getElementById("cartTotal");
   const count = cart.reduce((s, c) => s + c.qty, 0);
-  if (countEl) countEl.textContent = count;
+  if (countEl) {
+    countEl.textContent = count;
+    countEl.setAttribute("aria-live", "polite"); // Screen readers announce cart changes.
+  }
 
   if (!cart.length) {
     wrap.innerHTML = `<p class="cart-empty">Cart khali hai 👀<br>Kuch heat add karo!</p>`;
