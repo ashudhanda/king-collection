@@ -212,6 +212,10 @@ renderCart();
 
 /* ==================== PRODUCT CARD ==================== */
 function productCard(p) {
+  // No MRP (or price >= MRP) means no discount: a struck-through ₹0 / "0% off"
+  // badge would be wrong, so render the MRP and badge only when a real
+  // discount exists.
+  const hasDiscount = p.mrp > p.price;
   return `
   <a class="card" href="product.html?id=${p.id}" data-images="${p.images.join(',')}">
     <div class="card-img ph-wrap" data-label="${p.images[0]}.jpg">
@@ -222,8 +226,8 @@ function productCard(p) {
       <h4>${p.name}</h4>
       <div class="price-row">
         <span class="price">${fmt(p.price)}</span>
-        <s class="mrp">${fmt(p.mrp)}</s>
-        <span class="off">${offPct(p)}% off</span>
+        ${hasDiscount ? `<s class="mrp">${fmt(p.mrp)}</s>` : ""}
+        ${hasDiscount ? `<span class="off">${offPct(p)}% off</span>` : ""}
       </div>
     </div>
   </a>`;
@@ -318,8 +322,15 @@ if (productPage) {
   document.getElementById("crumbName").textContent = p.name;
   document.getElementById("pName").textContent = p.name;
   document.getElementById("pPrice").textContent = fmt(p.price);
-  document.getElementById("pMrp").textContent = fmt(p.mrp);
-  document.getElementById("pOff").textContent = offPct(p) + "% off";
+  // Same no-discount rule as productCard: hide the MRP strike-through and
+  // the "% off" badge instead of showing a struck-through ₹0 / "0% off".
+  const hasDiscount = p.mrp > p.price;
+  const pMrpEl = document.getElementById("pMrp");
+  pMrpEl.textContent = fmt(p.mrp);
+  pMrpEl.style.display = hasDiscount ? "" : "none";
+  const pOffEl = document.getElementById("pOff");
+  pOffEl.textContent = offPct(p) + "% off";
+  pOffEl.style.display = hasDiscount ? "" : "none";
   document.getElementById("pDesc").textContent = p.desc;
   // Per-product fit text; the old hardcoded "Oversized fit" was wrong for
   // footwear and bottoms (e.g. sneakers have no "oversized fit").
