@@ -321,6 +321,9 @@ if (productPage) {
   document.getElementById("pMrp").textContent = fmt(p.mrp);
   document.getElementById("pOff").textContent = offPct(p) + "% off";
   document.getElementById("pDesc").textContent = p.desc;
+  // Per-product fit text; the old hardcoded "Oversized fit" was wrong for
+  // footwear and bottoms (e.g. sneakers have no "oversized fit").
+  document.getElementById("pFit").textContent = p.fit || "Oversized fit. Model is wearing size M.";
   document.getElementById("sPrice").textContent = fmt(p.price);
   document.getElementById("sMrp").textContent = fmt(p.mrp);
 
