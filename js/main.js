@@ -89,6 +89,10 @@ function openCart(open) {
   cartDrawer.classList.toggle("open", open);
   cartOverlay.classList.toggle("open", open);
   document.body.style.overflow = open ? "hidden" : "";
+  // Keyboard users: move focus into the drawer when it opens (so Tab stays
+  // in the cart) and back to the cart button when it closes.
+  if (open) document.getElementById("cartClose").focus();
+  else document.getElementById("cartBtn")?.focus();
 }
 document.getElementById("cartBtn")?.addEventListener("click", () => openCart(true));
 document.getElementById("cartClose").addEventListener("click", () => openCart(false));
