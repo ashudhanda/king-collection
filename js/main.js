@@ -395,8 +395,11 @@ if (productPage) {
   document.getElementById("stickyAdd").addEventListener("click", () => addToCart(p.id, selectedSize));
   updateWaBtn();
 
-  // Related products
-  const related = PRODUCTS.filter((x) => x.id !== p.id).slice(0, 6);
+  // Related products: same category first (a tee page used to suggest
+  // sneakers and cargos before other tees), then fill with the rest.
+  const sameCat = PRODUCTS.filter((x) => x.id !== p.id && x.category === p.category);
+  const others = PRODUCTS.filter((x) => x.id !== p.id && x.category !== p.category);
+  const related = [...sameCat, ...others].slice(0, 6);
   const relatedRow = document.getElementById("relatedRow");
   relatedRow.innerHTML = related.map(productCard).join("");
   attachCardCycler(relatedRow);
