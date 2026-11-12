@@ -75,9 +75,9 @@ document.body.insertAdjacentHTML(
   "beforeend",
   `
   <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-label="Shopping cart">
     <div class="cart-head">
-      <h3>Your Cart</h3>
+      <h3 id="cartTitle">Your Cart</h3>
       <button class="icon-btn" id="cartClose" aria-label="Close cart">✕</button>
     </div>
     <div class="cart-items" id="cartItems"></div>
