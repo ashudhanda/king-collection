@@ -340,7 +340,11 @@ if (productPage) {
   // footwear and bottoms (e.g. sneakers have no "oversized fit").
   document.getElementById("pFit").textContent = p.fit || "Oversized fit. Model is wearing size M.";
   document.getElementById("sPrice").textContent = fmt(p.price);
-  document.getElementById("sMrp").textContent = fmt(p.mrp);
+  // Same no-discount rule as the main price row: without it the sticky bar
+  // showed a struck-through ₹0 / wrong MRP on full-price products.
+  const sMrpEl = document.getElementById("sMrp");
+  sMrpEl.textContent = fmt(p.mrp);
+  sMrpEl.style.display = hasDiscount ? "" : "none";
 
   // Gallery
   const mainImg = document.getElementById("mainImg");
