@@ -22,8 +22,13 @@ const rootEl = document.documentElement;
 
 function updateThemeIcons() {
   const dark = rootEl.getAttribute("data-theme") === "dark";
-  document.querySelectorAll("[data-theme-toggle] .t-icon").forEach((i) => {
-    i.textContent = dark ? "\u2600\ufe0f" : "\ud83c\udf19";
+  document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
+    // The label names the theme the button will switch TO, so a screen
+    // reader user knows what the tap does (the old static "Toggle
+    // light/dark theme" said nothing about the current state).
+    btn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    const icon = btn.querySelector(".t-icon");
+    if (icon) icon.textContent = dark ? "\u2600\ufe0f" : "\ud83c\udf19";
   });
 }
 
@@ -40,20 +45,26 @@ updateThemeIcons();
 /* ==================== MOBILE MENU ==================== */
 const burger = document.getElementById("burger");
 const mobileMenu = document.getElementById("mobileMenu");
+// Keep the burger's label in step with the menu: a screen reader would
+// otherwise keep hearing "Open menu" while the menu is already open.
+function setBurgerState(open) {
+  burger.setAttribute("aria-expanded", String(open));
+  burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
 if (burger && mobileMenu) {
   burger.setAttribute("aria-controls", "mobileMenu");
-  burger.setAttribute("aria-expanded", "false");
+  setBurgerState(false);
   burger.addEventListener("click", () => {
     const open = mobileMenu.classList.toggle("open");
     burger.classList.toggle("open", open);
-    burger.setAttribute("aria-expanded", String(open));
+    setBurgerState(open);
     document.body.style.overflow = open ? "hidden" : "";
   });
   mobileMenu.querySelectorAll("a").forEach((a) =>
     a.addEventListener("click", () => {
       mobileMenu.classList.remove("open");
       burger.classList.remove("open");
-      burger.setAttribute("aria-expanded", "false");
+      setBurgerState(false);
       document.body.style.overflow = "";
     })
   );
@@ -103,7 +114,7 @@ document.addEventListener("keydown", (e) => {
   else if (burger && mobileMenu && mobileMenu.classList.contains("open")) {
     mobileMenu.classList.remove("open");
     burger.classList.remove("open");
-    burger.setAttribute("aria-expanded", "false");
+    setBurgerState(false);
     document.body.style.overflow = "";
   }
 });
