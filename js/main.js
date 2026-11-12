@@ -119,6 +119,25 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+// The drawer is modal (aria-modal="true"), so Tab must cycle inside it
+// instead of wandering to the page behind — openCart's focus move alone
+// only lands focus once, it doesn't keep it there.
+cartDrawer.addEventListener("keydown", (e) => {
+  if (e.key !== "Tab") return;
+  const items = [...cartDrawer.querySelectorAll('button, a[href], input, [tabindex]:not([tabindex="-1"])')]
+    .filter((el) => !el.disabled && el.offsetParent !== null);
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
+
 /* ==================== CART LOGIC ==================== */
 let cart = [];
 try {
