@@ -7,7 +7,11 @@
   <link rel="icon" href="images/logo.png">
   <meta name="description" content="Shop premium oversized streetwear — tees, cargos, hoodies & sneakers.">
   <script>
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    // localStorage can throw (private mode / blocked storage). If the read
+    // throws, the whole inline script dies and imgFail is never defined, so
+    // every onerror="imgFail(this)" below would throw too — stay on the
+    // default dark theme instead.
+    try { document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark'); } catch (e) {}
     function imgFail(el){ el.style.display='none'; var w = el.closest('.ph-wrap'); if (w) w.classList.add('ph'); }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
