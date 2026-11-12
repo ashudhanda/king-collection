@@ -46,6 +46,14 @@ Har product ki 4 images, naming EXACT ye honi chahiye:
 
 Navbar me right side ☀️/🌙 button — dark ↔ light. User ki choice localStorage me save hoti hai.
 
+## 🧭 How it works
+
+- **Theme**: dark/light choice is saved in `localStorage` (`theme`) and applied before first paint, so there is no flash. If storage is blocked (private mode), the site just stays on dark.
+- **Cart**: cart items live in `localStorage` (`kingcollection_cart`) and survive reloads. Corrupted or hand-edited entries are dropped/validated on load, so a bad value can't break the cart or the total.
+- **Checkout**: no payment gateway — the cart builds an order message and opens WhatsApp to the number in `WHATSAPP_NUMBER` (`js/main.js`, top of file).
+- **Missing images**: a failed image hides itself and its frame becomes a labelled placeholder, so the layout never shows a broken-image icon.
+- **Accessibility**: the cart drawer moves focus inside when it opens, traps Tab while open, and closes on Escape; the burger and theme buttons announce their current state.
+
 ## 📦 Features
 
 - Fully mobile responsive (2-col grid, fullscreen menu, sticky add-to-cart bar)
