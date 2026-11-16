@@ -288,14 +288,23 @@ function attachCardCycler(scope) {
     let timer = null;
     const show = (n) => {
       i = n;
+      // The card can be removed mid-hover (e.g. a shop re-render replaces
+      // the grid while the mouse is still over it): mouseleave never fires
+      // then, so stop the interval here instead of updating a detached img
+      // forever.
+      if (!img.isConnected) { clearInterval(timer); timer = null; return; }
       img.style.display = "";
       wrap.classList.remove("ph");
       wrap.dataset.label = names[i] + ".jpg";
       img.src = imgSrc(names[i]);
     };
     card.addEventListener("mouseenter", () => {
-      // Baaki images preload, taki swap smooth ho
-      names.forEach((nm) => { const pre = new Image(); pre.src = imgSrc(nm); });
+      // Baaki images preload, taki swap smooth ho — once per card, not on
+      // every hover.
+      if (!card.dataset.preloaded) {
+        names.forEach((nm) => { const pre = new Image(); pre.src = imgSrc(nm); });
+        card.dataset.preloaded = "1";
+      }
       clearInterval(timer);
       timer = setInterval(() => show((i + 1) % names.length), 1000);
     });
