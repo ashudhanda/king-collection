@@ -194,6 +194,8 @@ function renderCart() {
   if (countEl) {
     countEl.textContent = count;
     countEl.setAttribute("aria-live", "polite"); // Screen readers announce cart changes.
+    // A "0" badge is noise — hide it until something is actually in the cart.
+    countEl.style.display = count ? "" : "none";
   }
 
   if (!cart.length) {
