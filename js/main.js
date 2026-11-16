@@ -6,6 +6,15 @@
 // ⚠️ APNA WHATSAPP NUMBER YAHA DAALO (country code ke saath, bina + ke)
 const WHATSAPP_NUMBER = "919814137851";
 
+// localStorage.setItem throws when storage is blocked (private mode), which
+// used to kill the click handler mid-flight: add-to-cart updated the in-
+// memory cart but never re-rendered, so the tap looked dead. Swallow the
+// failure instead — the page keeps working for the session, it just won't
+// persist across reloads.
+function safeSetItem(key, value) {
+  try { localStorage.setItem(key, value); } catch (e) { /* storage blocked; session-only */ }
+}
+
 const fmt = (n) => {
   const v = Number(n);
   return "\u20b9" + (Number.isFinite(v) ? v : 0).toLocaleString("en-IN");
@@ -36,7 +45,7 @@ document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const next = rootEl.getAttribute("data-theme") === "dark" ? "light" : "dark";
     rootEl.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
+    safeSetItem("theme", next);
     updateThemeIcons();
   });
 });
@@ -154,7 +163,7 @@ try {
 } catch (e) { cart = []; }
 
 function saveCart() {
-  localStorage.setItem("kingcollection_cart", JSON.stringify(cart));
+  safeSetItem("kingcollection_cart", JSON.stringify(cart));
   renderCart();
 }
 
