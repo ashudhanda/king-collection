@@ -15,6 +15,10 @@ function safeSetItem(key, value) {
   try { localStorage.setItem(key, value); } catch (e) { /* storage blocked; session-only */ }
 }
 
+// Declared up here (not in the animations block below) because setMain in
+// the product-page section runs before that block and needs it too.
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const fmt = (n) => {
   const v = Number(n);
   return "\u20b9" + (Number.isFinite(v) ? v : 0).toLocaleString("en-IN");
@@ -405,7 +409,9 @@ if (productPage) {
     mainImg.style.display = "";
     mainImg.src = imgSrc(name);
     mainImg.onerror = () => imgFail(mainImg);
-    if (window.gsap) gsap.fromTo(mainImg, { opacity: 0.4, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.4 });
+    // The hero animation already respects reduced motion; the gallery swap
+    // should too — a zoom/fade on every thumbnail tap is the same problem.
+    if (!reduceMotion && window.gsap) gsap.fromTo(mainImg, { opacity: 0.4, scale: 1.03 }, { opacity: 1, scale: 1, duration: 0.4 });
   }
 
   thumbs.innerHTML = p.images
@@ -473,7 +479,6 @@ if (newsForm) {
 }
 
 /* ==================== ANIMATIONS (sirf hero entrance — scroll simple/native hai) ==================== */
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (!reduceMotion && window.gsap && document.querySelector(".hero-title")) {
   gsap.from(".hero-title span", { yPercent: 110, opacity: 0, duration: 1, stagger: 0.12, ease: "power4.out" });
