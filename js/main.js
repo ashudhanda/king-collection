@@ -106,6 +106,13 @@ document.body.insertAdjacentHTML(
 document.getElementById("waFloat").href =
   `https://wa.me/${WHATSAPP_NUMBER}?text=` + encodeURIComponent("Hi King Collection! I have a question 👋");
 
+// The footer "Contact" link used to hardcode the same number, so a number
+// change in WHATSAPP_NUMBER left it stale — derive it from the constant
+// instead (the hardcoded href in the HTML stays as the no-JS fallback).
+document.querySelectorAll("[data-wa-link]").forEach((a) => {
+  a.href = `https://wa.me/${WHATSAPP_NUMBER}`;
+});
+
 const cartDrawer = document.getElementById("cartDrawer");
 const cartOverlay = document.getElementById("cartOverlay");
 
