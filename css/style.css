@@ -466,6 +466,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .product-layout { grid-template-columns: 1fr; gap: 32px; }
   .p-actions { margin-bottom: 24px; }
   .sticky-bar { display: flex; }
+  /* The sticky buy bar occupies the bottom ~73px of the product page, so
+     the WhatsApp float would sit on top of it (and its Add to Cart button)
+     — lift it above the bar on this page only. */
+  #productPage ~ .wa-float { bottom: 92px; }
   #productPage { padding-bottom: 76px; }
 
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
