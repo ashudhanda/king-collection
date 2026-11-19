@@ -487,6 +487,26 @@ if (newsForm) {
   });
 }
 
+/* ==================== SCROLL REVEAL ==================== */
+// The [data-reveal] attributes on section heads, category tiles and
+// feature cards sat unused — no JS or CSS ever read them, so nothing ever
+// animated. Reveal each one once as it scrolls into view. Reduced-motion
+// users never get the .reveal class (content stays visible as-is), and
+// browsers without IntersectionObserver see everything immediately.
+if (!reduceMotion && "IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      revealObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll("[data-reveal]").forEach((el) => {
+    el.classList.add("reveal");
+    revealObserver.observe(el);
+  });
+}
+
 /* ==================== ANIMATIONS (sirf hero entrance — scroll simple/native hai) ==================== */
 
 if (!reduceMotion && window.gsap && document.querySelector(".hero-title")) {
