@@ -189,6 +189,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-align: center; padding: 16px;
 }
 
+/* ---------- SCROLL REVEAL ---------- */
+/* [data-reveal] elements start hidden only once JS adds .reveal — a page
+   without JS never gets the class, so content is never hidden by CSS alone.
+   Reduced-motion users skip the class entirely (see main.js). */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
 /* ---------- MARQUEE ---------- */
 .marquee {
   background: var(--accent); color: var(--accent-text);
