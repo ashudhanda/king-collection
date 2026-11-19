@@ -212,7 +212,7 @@ function renderCart() {
       total += p.price * c.qty;
       return `
       <div class="cart-item">
-        <div class="ci-img ph-wrap" data-label="">
+        <div class="ci-img ph-wrap" data-label="${p.name}">
           <img src="${imgSrc(p.images[0])}" alt="${p.name}" onerror="imgFail(this)">
         </div>
         <div>
