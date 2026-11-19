@@ -261,7 +261,10 @@ document.getElementById("checkoutBtn").addEventListener("click", () => {
     .filter(Boolean);
   if (!lines.length) return;
   const msg = `Hi King Collection! Mera order:\n\n${lines.join("\n")}\n\nTotal: ${fmt(total)}`;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  // A popup blocker can make window.open return null (new tab blocked) —
+  // fall back to a same-tab navigation so the order still goes through.
+  if (!window.open(url, "_blank")) window.location.href = url;
 });
 
 renderCart();
