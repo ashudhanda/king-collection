@@ -426,7 +426,7 @@ if (productPage) {
   thumbs.innerHTML = p.images
     .map(
       (name, i) => `
-    <button class="thumb ph-wrap${i === 0 ? " active" : ""}" data-name="${name}" data-label="${name}" aria-label="View image ${i + 1}">
+    <button class="thumb ph-wrap${i === 0 ? " active" : ""}" data-name="${name}" data-label="${name}" aria-label="View image ${i + 1}" aria-current="${i === 0 ? "true" : "false"}">
       <img src="${imgSrc(name)}" alt="" loading="lazy" onerror="imgFail(this)">
     </button>`
     )
@@ -434,8 +434,12 @@ if (productPage) {
 
   thumbs.querySelectorAll(".thumb").forEach((t) =>
     t.addEventListener("click", () => {
-      thumbs.querySelectorAll(".thumb").forEach((x) => x.classList.remove("active"));
+      thumbs.querySelectorAll(".thumb").forEach((x) => {
+        x.classList.remove("active");
+        x.setAttribute("aria-current", "false");
+      });
       t.classList.add("active");
+      t.setAttribute("aria-current", "true");
       setMain(t.dataset.name);
     })
   );
@@ -444,8 +448,12 @@ if (productPage) {
 
   // Sizes
   const sizesEl = document.getElementById("sizes");
+  // A screen reader otherwise hears a row of bare buttons with no clue
+  // they are one "pick a size" choice — group them and mark the pressed one.
+  sizesEl.setAttribute("role", "group");
+  sizesEl.setAttribute("aria-label", "Select size");
   sizesEl.innerHTML = p.sizes
-    .map((s) => `<button class="size-btn${s === selectedSize ? " active" : ""}" data-size="${s}">${s}</button>`)
+    .map((s) => `<button class="size-btn${s === selectedSize ? " active" : ""}" data-size="${s}" aria-pressed="${s === selectedSize}">${s}</button>`)
     .join("");
   const waBtn = document.getElementById("waBtn");
   const updateWaBtn = () =>
@@ -454,8 +462,12 @@ if (productPage) {
       encodeURIComponent(`Hi King Collection! I want to order: ${p.name} (Size ${selectedSize}) — ${fmt(p.price)}`));
   sizesEl.querySelectorAll(".size-btn").forEach((b) =>
     b.addEventListener("click", () => {
-      sizesEl.querySelectorAll(".size-btn").forEach((x) => x.classList.remove("active"));
+      sizesEl.querySelectorAll(".size-btn").forEach((x) => {
+        x.classList.remove("active");
+        x.setAttribute("aria-pressed", "false");
+      });
       b.classList.add("active");
+      b.setAttribute("aria-pressed", "true");
       selectedSize = b.dataset.size;
       updateWaBtn(); // Otherwise the WhatsApp message keeps the size selected on page load.
     })
