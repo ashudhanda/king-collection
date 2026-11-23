@@ -171,6 +171,16 @@ try {
         .filter((c) => c && typeof c === "object" && Number.isFinite(+c.id) && typeof c.size === "string" && Number.isFinite(+c.qty) && +c.qty > 0)
         .map((c) => ({ id: +c.id, size: c.size, qty: Math.floor(+c.qty) }))
     : [];
+  // A product removed from the catalog since the cart was saved would
+  // otherwise render a blank row (renderCart maps it to ""), inflate the
+  // badge count, and — if every entry is stale — make checkout silently do
+  // nothing (no order lines). Drop those entries now and persist the
+  // cleaned cart so they don't come back on the next load.
+  const purged = cart.filter((c) => PRODUCTS.some((p) => p.id === c.id));
+  if (purged.length !== cart.length) {
+    cart = purged;
+    safeSetItem("kingcollection_cart", JSON.stringify(cart));
+  }
 } catch (e) { cart = []; }
 
 function saveCart() {
