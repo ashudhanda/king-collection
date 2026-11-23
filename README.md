@@ -49,7 +49,7 @@ Navbar me right side ☀️/🌙 button — dark ↔ light. User ki choice local
 ## 🧭 How it works
 
 - **Theme**: dark/light choice is saved in `localStorage` (`theme`) and applied before first paint, so there is no flash. If storage is blocked (private mode), the site just stays on dark.
-- **Cart**: cart items live in `localStorage` (`kingcollection_cart`) and survive reloads. Corrupted or hand-edited entries are dropped/validated on load, so a bad value can't break the cart or the total.
+- **Cart**: cart items live in `localStorage` (`kingcollection_cart`) and survive reloads. Corrupted or hand-edited entries are dropped/validated on load, so a bad value can't break the cart or the total. Entries for products removed from the catalog are dropped too, so a stale cart can never show a blank row or a dead checkout.
 - **Checkout**: no payment gateway — the cart builds an order message and opens WhatsApp to the number in `WHATSAPP_NUMBER` (`js/main.js`, top of file).
 - **Missing images**: a failed image hides itself and its frame becomes a labelled placeholder, so the layout never shows a broken-image icon.
 - **Accessibility**: the cart drawer moves focus inside when it opens, traps Tab while open, and closes on Escape; the burger and theme buttons announce their current state.
@@ -59,8 +59,9 @@ Navbar me right side ☀️/🌙 button — dark ↔ light. User ki choice local
 - Fully mobile responsive (2-col grid, fullscreen menu, sticky add-to-cart bar)
 - GSAP hero entrance animation
 - Cart (localStorage) + WhatsApp checkout
-- Shop page filters (category-wise)
-- Product page: 4-image gallery, size selector, WhatsApp order button
+- Shop page filters (category-wise, deep-linkable via `?cat=` and `?tag=`)
+- Product page: 4-image gallery, size selector, WhatsApp order button, related products (same category first)
+- Scroll-reveal animations (skipped under `prefers-reduced-motion`)
 - Image missing ho toh graceful placeholder
 
 ## 🌐 Deploy (FREE)
