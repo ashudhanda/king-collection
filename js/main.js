@@ -116,14 +116,24 @@ document.querySelectorAll("[data-wa-link]").forEach((a) => {
 const cartDrawer = document.getElementById("cartDrawer");
 const cartOverlay = document.getElementById("cartOverlay");
 
+// Focus returns to whatever opened the cart (an Add to Cart button, the
+// cart icon) — always sending it to the cart button made a keyboard user
+// who added from a product page lose their place on close.
+let cartOpener = null;
 function openCart(open) {
   cartDrawer.classList.toggle("open", open);
   cartOverlay.classList.toggle("open", open);
   document.body.style.overflow = open ? "hidden" : "";
   // Keyboard users: move focus into the drawer when it opens (so Tab stays
-  // in the cart) and back to the cart button when it closes.
-  if (open) document.getElementById("cartClose").focus();
-  else document.getElementById("cartBtn")?.focus();
+  // in the cart) and back to the opener when it closes.
+  if (open) {
+    cartOpener = document.activeElement;
+    document.getElementById("cartClose").focus();
+  } else if (cartOpener && cartOpener !== document.body && cartOpener.isConnected) {
+    cartOpener.focus();
+  } else {
+    document.getElementById("cartBtn")?.focus();
+  }
 }
 document.getElementById("cartBtn")?.addEventListener("click", () => openCart(true));
 document.getElementById("cartClose").addEventListener("click", () => openCart(false));
