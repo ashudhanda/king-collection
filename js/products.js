@@ -4,6 +4,11 @@
 // images array = images/products/ folder ke filenames (bina .jpg ke)
 // Har product ki 4 images: front, back, model-front, model-back
 // fit = "Fabric & Fit" accordion me dikhne wala text (product page)
+// category = shop filter key — must match a data-filter value in
+//   shop.html (tshirts/shirts/bottoms/hoodies/footwear); a value with no
+//   matching button only ever shows under "All".
+// tag = shelf label — matched exactly by ?tag= links (e.g. the "New Drop"
+//   nav link), so keep the spelling identical in both places.
 // ============================================
 
 const PRODUCTS = [
