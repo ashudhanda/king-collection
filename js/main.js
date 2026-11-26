@@ -357,6 +357,12 @@ if (shopGrid) {
   // ?tag=New%20Drop (from the "New Drop" nav link) filters by product tag.
   let tag = params.get("tag") || "";
   const countEl = document.querySelector(".page-sub");
+  // Button labels ("T-Shirts", "Hoodies" ...) for the tab title — looked up
+  // from the buttons so a label rename in shop.html flows through here.
+  const labelFor = (f) => {
+    const btn = [...document.querySelectorAll(".filter-btn")].find((b) => b.dataset.filter === f);
+    return btn ? btn.textContent.trim() : f;
+  };
   const renderGrid = (filter) => {
     let list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
     if (tag) list = PRODUCTS.filter((p) => p.tag === tag);
@@ -365,6 +371,13 @@ if (shopGrid) {
     shopGrid.innerHTML = list.map(productCard).join("") || `<p class="cart-empty">No products match this filter.</p>`;
     // The old hardcoded "8 pieces" went stale the moment a product was added.
     if (countEl) countEl.textContent = `${list.length} piece${list.length === 1 ? "" : "s"}${tag ? " · " + tag : ""}. Zero fillers. All heat.`;
+    // The tab title names the shelf being viewed instead of the generic
+    // "Shop" on every filtered view (?cat=hoodies, ?tag=New Drop).
+    document.title = tag
+      ? `${tag} — KING COLLECTION`
+      : filter === "all"
+        ? "Shop — KING COLLECTION"
+        : `${labelFor(filter)} — KING COLLECTION`;
     attachCardCycler(shopGrid);
   };
 
