@@ -360,7 +360,9 @@ if (shopGrid) {
   const renderGrid = (filter) => {
     let list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
     if (tag) list = PRODUCTS.filter((p) => p.tag === tag);
-    shopGrid.innerHTML = list.map(productCard).join("") || `<p class="cart-empty">No products yet.</p>`;
+    // "No products yet" was wrong here: the catalog is not empty, the
+    // filter (e.g. a bogus ?tag=) just matches nothing.
+    shopGrid.innerHTML = list.map(productCard).join("") || `<p class="cart-empty">No products match this filter.</p>`;
     // The old hardcoded "8 pieces" went stale the moment a product was added.
     if (countEl) countEl.textContent = `${list.length} piece${list.length === 1 ? "" : "s"}${tag ? " · " + tag : ""}. Zero fillers. All heat.`;
     attachCardCycler(shopGrid);
