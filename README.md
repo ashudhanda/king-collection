@@ -18,6 +18,7 @@ Saari images `images/` folder me jayengi. **3:4 ratio (1080x1440), .jpg format.*
 |---|---|
 | `images/hero.jpg` | Homepage hero (model shot, portrait) |
 | `images/lookbook.jpg` | "Don't Blend In" banner (wide/landscape best) |
+| `images/logo.png` | Navbar + footer logo, and the favicon |
 
 ### Product images — `images/products/` folder me
 Har product ki 4 images, naming EXACT ye honi chahiye:
